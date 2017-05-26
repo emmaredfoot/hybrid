@@ -1,4 +1,4 @@
-#include "dual_generation.h"
+#include "cogeneration.h"
 
 #include <sstream>
 #include <limits>
@@ -7,26 +7,26 @@
 
 namespace hybrid {
 
-DualGeneration::DualGeneration(cyclus::Context* ctx)
+Cogeneration::Cogeneration(cyclus::Context* ctx)
     : cyclus::Facility(ctx),
       throughput(std::numeric_limits<double>::max()),
       inventory_size(std::numeric_limits<double>::max()) {}
 
-DualGeneration::~DualGeneration() {}
+Cogeneration::~Cogeneration() {}
 
-void DualGeneration::InitFrom(DualGeneration* m) {
-  #pragma cyclus impl initfromcopy hybrid::DualGeneration
+void Cogeneration::InitFrom(Cogeneration* m) {
+  #pragma cyclus impl initfromcopy hybrid::Cogeneration
   cyclus::toolkit::CommodityProducer::Copy(m);
 }
 
-void DualGeneration::InitFrom(cyclus::QueryableBackend* b) {
-  #pragma cyclus impl initfromdb hybrid::DualGeneration
+void Cogeneration::InitFrom(cyclus::QueryableBackend* b) {
+  #pragma cyclus impl initfromdb hybrid::Cogeneration
   namespace tk = cyclus::toolkit;
   tk::CommodityProducer::Add(tk::Commodity(outcommod),
                              tk::CommodInfo(throughput, throughput));
 }
 
-std::string DualGeneration::str() {
+std::string Cogeneration::str() {
   namespace tk = cyclus::toolkit;
   std::stringstream ss;
   std::string ans;
@@ -46,7 +46,7 @@ std::string DualGeneration::str() {
   return ss.str();
 }
 
-std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> DualGeneration::GetMatlBids(
+std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> Cogeneration::GetMatlBids(
     cyclus::CommodMap<cyclus::Material>::type& commod_requests) {
   using cyclus::Bid;
   using cyclus::BidPortfolio;
@@ -55,9 +55,9 @@ std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> DualGeneration::GetMatlBid
   using cyclus::Request;
 
   double max_qty = std::min(throughput, inventory_size);
-  LOG(cyclus::LEV_INFO3, "DualGeneration") << prototype() << " is bidding up to "
+  LOG(cyclus::LEV_INFO3, "Cogeneration") << prototype() << " is bidding up to "
                                    << max_qty << " kg of " << outcommod;
-  LOG(cyclus::LEV_INFO5, "DualGeneration") << "stats: " << str();
+  LOG(cyclus::LEV_INFO5, "Cogeneration") << "stats: " << str();
 
   std::set<BidPortfolio<Material>::Ptr> ports;
   if (max_qty < cyclus::eps()) {
@@ -86,7 +86,7 @@ std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> DualGeneration::GetMatlBid
   return ports;
 }
 
-void DualGeneration::GetMatlTrades(
+void Cogeneration::GetMatlTrades(
     const std::vector<cyclus::Trade<cyclus::Material> >& trades,
     std::vector<std::pair<cyclus::Trade<cyclus::Material>,
                           cyclus::Material::Ptr> >& responses) {
@@ -105,13 +105,13 @@ void DualGeneration::GetMatlTrades(
       response = Material::Create(this, qty, it->request->target()->comp());
     }
     responses.push_back(std::make_pair(*it, response));
-    LOG(cyclus::LEV_INFO5, "DualGeneration") << prototype() << " sent an order"
+    LOG(cyclus::LEV_INFO5, "Cogeneration") << prototype() << " sent an order"
                                      << " for " << qty << " of " << outcommod;
   }
 }
 
-extern "C" cyclus::Agent* ConstructDualGeneration(cyclus::Context* ctx) {
-  return new DualGeneration(ctx);
+extern "C" cyclus::Agent* ConstructCogeneration(cyclus::Context* ctx) {
+  return new Cogeneration(ctx);
 }
 
 }  // namespace hybrid
