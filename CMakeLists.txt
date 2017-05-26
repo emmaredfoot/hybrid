@@ -1,4 +1,4 @@
-# DO NOT DELETE THIS LINE:: dual_generation:hybrid:DualGeneration
+Cogeneration# DO NOT DELETE THIS LINE:: cogeneration:hybrid:DualGeneration
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 # taken from http://geant4.cern.ch/support/source/geant4/CMakeLists.txt
@@ -85,6 +85,7 @@ MESSAGE("CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}")
 FIND_PACKAGE(Cyclus REQUIRED)
 SET(STUB_INCLUDE_DIRS ${STUB_INCLUDE_DIRS} ${CYCLUS_CORE_INCLUDE_DIR})
 SET(LIBS ${LIBS} ${CYCLUS_CORE_LIBRARIES})
+SET(CORE_SHARE_DIR ${CYCLUS_CORE_SHARE_DIR})
 
 # Include macros
 INCLUDE(UseCyclus)
