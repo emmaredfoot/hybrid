@@ -6,11 +6,8 @@
 #include <vector>
 
 #include "cyclus.h"
-#include "hybrid_version.h"
 
 namespace hybrid {
-
-class Context;
 
 /// This facility acts as a cogeneration of material with a (need to make this into a fluctuating amount) fixed throughput (per
 /// time step) capacity and a lifetime capacity defined by a total inventory
@@ -27,14 +24,12 @@ class Cogeneration : public cyclus::Facility,
   friend class CogenerationTest;
  public:
 
-  Cogeneration(cyclus::Context* ctx);
+  explicit Cogeneration(cyclus::Context* ctx);
 
   virtual ~Cogeneration();
 
-  virtual std::string version() { return HYBRID_VERSION; }
-
   #pragma cyclus note { \
-    "doc": "This facility produces multiple commodities, cogenerating multiple resources.\n" \
+    "doc": "This facility produces multiple commodities, cogenerating multiple resources.\n" 
            "The throughput changes based on optimization and preferences at each time step. \n"
            "At each time step once the total inventory has been met, the time step has completed. \n"
            "The lifetime capacity is defined by the total inventory size\n" \
@@ -126,4 +121,4 @@ class Cogeneration : public cyclus::Facility,
 
 }  // namespace hybrid
 
-#endif  // HYBRID_SRC_SOURCE_H_
+#endif // CYCLUS_HYBRID_COGENERATION_H_
