@@ -1,4 +1,4 @@
-//If the function has been previously defined great, if not open it for this file
+//#ifndef If the function has been previously defined great, if not open it for this file
 #ifndef CYCLUS_HYBRID_COGENERATION_H_
 #define CYCLUS_HYBRID_COGENERATION_H_
 
@@ -43,7 +43,7 @@ class Cogeneration : public cyclus::Facility,
            "no more material.\n" \
            "", \
   }
-//pragma is one of the input variables
+//Use the default ( python's function def) 
   #pragma cyclus def clone
   #pragma cyclus def schema
   #pragma cyclus def annotations
