@@ -29,12 +29,12 @@ class Cogeneration : public cyclus::Facility,
   virtual ~Cogeneration();
 
   #pragma cyclus note { \
-    "doc": "This facility produces multiple commodities, cogenerating multiple resources.\n" 
-           "The throughput changes based on optimization and preferences at each time step. \n"
-           "At each time step once the total inventory has been met, the time step has completed. \n"
+    "doc": "This facility produces multiple commodities, cogenerating multiple resources.\n" \
+           "The throughput changes based on optimization and preferences at each time step. \n" \
+           "At each time step once the total inventory has been met, the time step has completed. \n" \
            "The lifetime capacity is defined by the total inventory size\n" \
-           "There are two resources generated in the cogeneration agent.It offers its mater \n"
-           "as two commodities. In order to change the commodity, we will need to put the \n"
+           "There are two resources generated in the cogeneration agent.It offers its mater \n" \
+           "as two commodities. In order to change the commodity, we will need to put the \n" \
            "commodity through a commodity changer.\n"\
            "There will not be a composition recipe specified.\n" \
            "The inventory size and throughput both default to\n" \
