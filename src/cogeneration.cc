@@ -10,7 +10,7 @@ namespace hybrid {
 
 //Is this a defination of a new class?
 //ctx is an instance (the timestep) that is passed throughout cyclus
-//Not sure of what the syntax of the single and double semicolons represents
+//Not sure of what the syntax of the single and double semicolons represents. Think it means inherits from.
 Cogeneration::Cogeneration(cyclus::Context* ctx) //Cogeneration inherits from Cogeneration with the instance of ctx. Context* seems to also be either an instance or a pointer. This is a definition of a new facility with the characteristics of throughput and inventory_size. I will probably need to change this to having multiple throughput values
     : cyclus::Facility(ctx),
       throughput(std::numeric_limits<double>::max()),
@@ -131,7 +131,7 @@ void Cogeneration::GetMatlTrades(
                                      << " for " << qty << " of " << outcommod;
   }
 }
-//The compiler knows that there is some variable string C. Moves on to the next time step. I do not see where it iterates through the time step. 
+//The compiler knows that there is some variable string C. Moves on to the next time step. I do not see where it iterates through the time step.
 extern "C" cyclus::Agent* ConstructCogeneration(cyclus::Context* ctx) {
   return new Cogeneration(ctx);
 }

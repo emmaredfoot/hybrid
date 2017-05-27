@@ -1,4 +1,4 @@
-Cogeneration# DO NOT DELETE THIS LINE:: cogeneration:hybrid:DualGeneration
+# DO NOT DELETE THIS LINE:: cogeneration:hybrid:DualGeneration
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 # taken from http://geant4.cern.ch/support/source/geant4/CMakeLists.txt
