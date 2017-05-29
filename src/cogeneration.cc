@@ -1,5 +1,4 @@
 #include "cogeneration.h"
-#include "allocator.cc"
 
 #include <sstream>
 #include <limits>
@@ -19,9 +18,10 @@ Cogeneration::Cogeneration(cyclus::Context* ctx) //Cogeneration inherits from Co
     //This portion of the code seems to just be creating the facility that has a
     //reactor_size. I want to first generate how much resource is made, then split that amount
       reactor_size(std::numeric_limits<double>::max()),
-      inventory_size(std::numeric_limits<double>::max()) {}
+      inventory_size(std::numeric_limits<double>::max()),
+      allocation_percent(std::numeric_limits<double>::max()) {}
 
-//Cogeneration deconstructor is defined (this .cc file?) with no instances included
+//Cogeneration deconstructor is defined with no instances included
 Cogeneration::~Cogeneration() {}
 
 //Initialize the facility Cogeneration with no return value. Define it as having the same characteristics as producing a commodity.
