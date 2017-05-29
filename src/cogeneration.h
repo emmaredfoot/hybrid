@@ -141,10 +141,10 @@ class Cogeneration : public cyclus::Facility,
 
   //From seperations.h
    #pragma cyclus var { \
-     "doc": "Ordered list of commodities on which to request feed material to " \
-            "separate. Order only matters for matching up with feed commodity " \
+     "doc": "Ordered list of commodities (such as heat and electricity) requesting the generated resource " \
+            "Order only matters for matching up with feed commodity (heat from reactor) " \
             "preferences if specified.", \
-     "uilabel": "Feed Commodity List", \
+     "uilabel": "Commodities Demanded List", \
      "uitype": ["oneormore", "incommodity"], \
    }
    std::vector<std::string> out_commods;
