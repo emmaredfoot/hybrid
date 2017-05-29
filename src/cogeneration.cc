@@ -1,4 +1,5 @@
 #include "cogeneration.h"
+#include "allocator.cc"
 
 #include <sstream>
 #include <limits>
@@ -20,7 +21,7 @@ Cogeneration::Cogeneration(cyclus::Context* ctx) //Cogeneration inherits from Co
       reactor_size(std::numeric_limits<double>::max()),
       inventory_size(std::numeric_limits<double>::max()) {}
 
-//Cogeneration method is defined (this .cc file?) with no instances included
+//Cogeneration deconstructor is defined (this .cc file?) with no instances included
 Cogeneration::~Cogeneration() {}
 
 //Initialize the facility Cogeneration with no return value. Define it as having the same characteristics as producing a commodity.
@@ -62,7 +63,7 @@ std::string Cogeneration::str() {
   return ss.str();
 }
 
-//std is a general purpose wrapper < is
+//std is a general purpose wrapper
 std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> Cogeneration::GetMatlBids(
     cyclus::CommodMap<cyclus::Material>::type& commod_requests) {
 //using makes the class visible
