@@ -1,8 +1,6 @@
 #include "cogeneration.h"
-
 #include <sstream>
 #include <limits>
-
 #include <boost/lexical_cast.hpp>
 
 //namespace is like a package that encorporates all of the classes

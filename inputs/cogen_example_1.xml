@@ -2,7 +2,7 @@
 
 <simulation>
   <control>
-    <duration>10</duration>
+    <duration>43800</duration>
     <startmonth>1</startmonth>
     <startyear>2000</startyear>
   </control>
@@ -32,12 +32,13 @@
 
   <facility>
     <name>Cogeneration</name>
-    <lifetime>5</lifetime>
+    <reactor_size>2200</reactor_size>
+    <lifetime>-1</lifetime>
     <config>
       <Cogeneration>
         <outcommod>heat</outcommod>
-        <outcommd>electricity</outcommod>
-        <outrecipe>commod_recipe</outrecipe>
+        <outcommod>electricity</outcommod>
+        <outrecipe></outrecipe>
         <throughput>1</throughput>
       </Cogeneration>
     </config>
