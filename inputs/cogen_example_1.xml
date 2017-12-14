@@ -1,57 +1,69 @@
-<!-- 1 Source Source, 1 Sink Sink -->
-
 <simulation>
   <control>
-    <duration>43800</duration>
+    <duration>50</duration>
     <startmonth>1</startmonth>
     <startyear>2000</startyear>
+    <dt>1728</dt>
+    <solver><config><coin-or><timeout>100</timeout><verbose>1</verbose></coin-or></config></solver>
   </control>
 
   <archetypes>
-    <spec>
-      <lib>hybrid</lib>
-      <name>Cogeneration</name>
-    </spec>
-    <spec>
-      <lib>hybrid</lib>
-      <name>Electricity</name>
-    </spec>
-    <spec>
-      <lib>hybrid</lib>
-      <name>Heat</name>
-    </spec>
-    <spec>
-      <lib>agents</lib>
-      <name>NullRegion</name>
-    </spec>
-    <spec>
-      <lib>agents</lib>
-      <name>NullInst</name>
-    </spec>
+    <spec> <lib>agents</lib> <name>NullInst</name></spec>
+    <spec> <lib>agents</lib><name>NullRegion</name></spec>
+    <spec> <lib>agents</lib><name>KFacility</name></spec>
+    <spec> <lib>cycamore</lib> <name>Source</name></spec>
+    <spec> <lib>cycamore</lib> <name>Sink</name></spec>
   </archetypes>
 
   <facility>
-    <name>Cogeneration</name>
-    <reactor_size>2200</reactor_size>
-    <lifetime>-1</lifetime>
+    <name>Reactor</name>
     <config>
-      <Cogeneration>
+      <Source>
         <outcommod>heat</outcommod>
-        <outcommod>electricity</outcommod>
-        <outrecipe></outrecipe>
-        <throughput>1</throughput>
-      </Cogeneration>
+        <outrecipe>commod_recipe</outrecipe>
+        <throughput>2200</throughput>
+      </Source>
     </config>
   </facility>
 
   <facility>
-    <name>Electricity</name>
+    <name>Turbine</name>
+    <config>
+      <KFacility>
+        <in_commod>heat</in_commod>
+        <out_commod>electricity</out_commod>
+        <recipe_name>commod_recipe</recipe_name>
+        <in_capacity>4545</in_capacity>
+        <out_capacity>1500</out_capacity>
+        <k_factor_in>10</k_factor_in>
+        <k_factor_out>30</k_factor_out>
+      </KFacility>
+    </config>
+  </facility>
+
+  <facility>
+    <name>Grid</name>
     <config>
       <Sink>
-        <in_commods>
-          <val>commodity</val>
-        </in_commods>
-        <capacity>1</capacity>
+        <in_commods><val>electricity</val></in_commods>
+      </Sink>
+    </config>
+  </facility>
+
+  <facility>
+    <name>Desalination</name>
+    <config>
+      <Sink>
+        <in_commods><val>heat</val></in_commods>
+      </Sink>
+    </config>
+  </facility>
+
+  <facility>
+    <name>Seawater_Xtract</name>
+    <config>
+      <Sink>
+        <in_commods><val>heat</val></in_commods>
       </Sink>
     </config>
   </facility>
@@ -63,11 +75,19 @@
       <name>SingleInstitution</name>
       <initialfacilitylist>
         <entry>
-          <prototype>Source</prototype>
+          <prototype>Reactor</prototype>
           <number>1</number>
         </entry>
         <entry>
-          <prototype>Sink</prototype>
+          <prototype>Desalination</prototype>
+          <number>1</number>
+        </entry>
+        <entry>
+          <prototype>Grid</prototype>
+          <number>1</number>
+        </entry>
+        <entry>
+          <prototype>Seawater_Xtract</prototype>
           <number>1</number>
         </entry>
       </initialfacilitylist>
