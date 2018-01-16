@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 
-#include "cyclus.h"
+#include "/home/cyc-user/cyclus/cyclus/src/cyclus.h"
 
 namespace hybrid {
 
@@ -32,6 +32,8 @@ class Cogeneration : public cyclus::Facility,
 //~Destructor class
   virtual ~Cogeneration();
 
+  virtual std::string version() {return HYBRID_VERSION;}
+
 //I am going to copy the above syntax to create a new method that will split the generated resource into
 //the quantities which the two sink locations demand. I am unsure as to whether I should create a new class
 //or if it makes more sense to include this second method of splitting the resource generated in the same class?
@@ -39,7 +41,10 @@ class Cogeneration : public cyclus::Facility,
 
   #pragma cyclus note { \
     "doc": "This facility produces multiple commodities, cogenerating multiple resources.\n" \
-           "The reactor_size changes based on optimization and preferences at each time step. \n" \
+           "The reactor_heat input is the size of the reactor in MWth, a constant value\n" \
+           "The cycle_efficiency input determines the output of electricity given the heat which has been allocated\n" \
+           "to electricity generation\n"\
+           "The grid_demand input changes at every time step."
            "At each time step once the total inventory has been met, the time step has completed. \n" \
            "The lifetime capacity is defined by the total inventory size\n" \
            "There are two resources generated in the cogeneration agent.It offers its mater \n" \

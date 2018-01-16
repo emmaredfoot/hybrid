@@ -13,17 +13,16 @@
     <spec> <lib>agents</lib><name>KFacility</name></spec>
     <spec> <lib>cycamore</lib> <name>Source</name></spec>
     <spec> <lib>cycamore</lib> <name>Sink</name></spec>
-    <spec><lib>hybrid</lib><name>Cogeneration</name></spec>
   </archetypes>
 
   <facility>
     <name>Reactor</name>
     <config>
-      <Cogeneration>
+      <Source>
         <outcommod>heat</outcommod>
         <outrecipe>commod_recipe</outrecipe>
         <throughput>6666.67</throughput>
-      </Cogeneration>
+      </Source>
     </config>
   </facility>
 
@@ -43,16 +42,6 @@
   </facility>
 
   <facility>
-    <name>Grid</name>
-    <config>
-      <Sink>
-        <in_commods><val>electricity</val></in_commods>
-        <capacity>1500</capacity>
-      </Sink>
-    </config>
-  </facility>
-
-  <facility>
     <name>Desalination</name>
     <config>
       <KFacility>
@@ -67,28 +56,6 @@
     </config>
   </facility>
 
-<!--
-  <facility>
-    <name>Desalination</name>
-    <config>
-      <Sink>
-        <in_commods><val>heat</val></in_commods>
-        <capacity>3000</capacity>
-      </Sink>
-    </config>
-  </facility>
-
-  <facility>
-    <name>Seawater_Xtract</name>
-    <config>
-      <Sink>
-        <in_commods><val>brine</val></in_commods>
-        <capacity>50</capacity>
-      </Sink>
-    </config>
-  </facility>
--->
-
   <region>
     <name>SingleRegion</name>
     <config><NullRegion/></config>
@@ -100,15 +67,11 @@
           <number>1</number>
         </entry>
         <entry>
+          <prototype>Turbine</prototype>
+          <number>1</number>
+        </entry>
+        <entry>
           <prototype>Desalination</prototype>
-          <number>1</number>
-        </entry>
-        <entry>
-          <prototype>Grid</prototype>
-          <number>1</number>
-        </entry>
-        <entry>
-          <prototype>Seawater_Xtract</prototype>
           <number>1</number>
         </entry>
       </initialfacilitylist>
