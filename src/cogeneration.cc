@@ -100,8 +100,6 @@ long int offer_amt(){
     std::cout << demand[i] << std::endl;
 
   }
-
-
   return(demand);
 
 }

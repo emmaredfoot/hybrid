@@ -9,12 +9,12 @@
 
 namespace hybrid {
 
-/// This facility acts as a cogeneration of material with a (need to make this into a fluctuating amount) fixed reactor_size (per
+/// This facility acts as a cogeneration of material with a (need to make this into a fluctuating amount) fixed reactor_heat (per
 /// time step) capacity and a lifetime capacity defined by a total inventory
 /// size(In this case the total inventory size will just be the thermal output of the reactor times the lifetime of the reactor).  It offers its material as a single commodity (Need to change this to two commodities, or have a commodity changer). If a composition (What does composition refer to in this context? Is it the isotopic makeup? Can it be parts heat and parts electricity?)
 /// recipe is specified, it provides that single material composition to
 /// requesters.  If unspecified, the cogeneration provides materials with the exact
-/// requested compositions.  The inventory size and reactor_size both default to
+/// requested compositions.  The inventory size and reactor_heat both default to
 /// infinite.  Supplies material results in corresponding decrease in
 /// inventory, and when the inventory size reaches zero, the cogeneration can provide
 /// no more material.
@@ -32,15 +32,15 @@ class Cogeneration : public cyclus::Facility,
 //~Destructor class
   virtual ~Cogeneration();
 
-  virtual std::string version() {return HYBRID_VERSION;}
+  virtual std::string version() {return 0;}
 
 //I am going to copy the above syntax to create a new method that will split the generated resource into
 //the quantities which the two sink locations demand. I am unsure as to whether I should create a new class
 //or if it makes more sense to include this second method of splitting the resource generated in the same class?
 
-
+/*
   #pragma cyclus note { \
-    "doc": "This facility produces multiple commodities, cogenerating multiple resources.\n" \
+    "doc": "This facility produces multiple commodities, cogenerating multiple resources.\n"\
            "The reactor_heat input is the size of the reactor in MWth, a constant value\n" \
            "The cycle_efficiency input determines the output of electricity given the heat which has been allocated\n" \
            "to electricity generation\n"\
@@ -51,13 +51,12 @@ class Cogeneration : public cyclus::Facility,
            "as two commodities. In order to change the commodity, we will need to put the \n" \
            "commodity through a commodity changer.\n"\
            "There will not be a composition recipe specified.\n" \
-           "The inventory size and reactor_size both default to\n" \
+           "The inventory size and reactor_heat both default to\n" \
            "infinite.  Supplies material results in corresponding decrease in\n" \
            "inventory, and when the inventory size reaches zero, the cogeneration can provide\n" \
-           "no more material.\n" \
-           "", \
+           "no more material.\n" \ }
   }
-
+*/
 
 //Use the default ( python's function def - define)
   #pragma cyclus def clone
@@ -142,7 +141,7 @@ class Cogeneration : public cyclus::Facility,
     "range": [0.0, 1e299], \
     "doc": "amount of commodity that can be supplied at each time step", \
   }
-  double reactor_size;
+  double reactor_heat;
 
   //From seperations.h
    #pragma cyclus var { \
