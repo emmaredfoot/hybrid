@@ -4,27 +4,21 @@
 #include <boost/lexical_cast.hpp>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
-#include <sstream>
+#include <vector>
 int x=-1;
 
 //namespace is like a package that encorporates all of the classes
 namespace hybrid {
 
-//Is this a defination of a new class?
-//ctx is an instance (the timestep) that is passed throughout cyclus
-//Not sure of what the syntax of the single and double semicolons represents.
-//Means look in the namespace more or less
+//Is this a definition  of new type cogeneration
+//ctx is an instance (the timestep) that is passed throughout
 Cogeneration::Cogeneration(cyclus::Context* ctx)
     : cyclus::Facility(ctx),
-    //reactor_heat: the size of the reactor in MW thermal
-
-
       reactor_heat(std::numeric_limits<double>::max()),
       cycle_efficiency(std::numeric_limits<double>::max()) {}
 
-//Cogeneration deconstructor is defined with no instances included
+//Cogeneration destructor
 Cogeneration::~Cogeneration() {}
 
 //Initialize the facility Cogeneration with no return value. Define it as
@@ -35,9 +29,7 @@ void Cogeneration::InitFrom(Cogeneration* m) {
   #pragma cyclus impl initfromcopy hybrid::Cogeneration
   cyclus::toolkit::CommodityProducer::Copy(m);
 }
-//toolkit has a lot of tests without the actual commodity_producer.cc facility_tests
 
-//Initialize a function without returning anything. This maybe the backend.
 //I am not sure why there is an initialization from Cogeneration* and one
 //from QueryableBackend*. InitFrom is a superclass.
 //A superclass is the base class from which all other classes are derived.
@@ -48,7 +40,10 @@ void Cogeneration::InitFrom(cyclus::QueryableBackend* b) {
   //and the reactor_heat as given by the xml file
   namespace tk = cyclus::toolkit;
   tk::CommodityProducer::Add(tk::Commodity(outcommod),
-                             tk::CommodInfo(reactor_heat, reactor_heat));
+                             tk::CommodInfo(reactor_heat, cycle_efficiency));
+  //I am trying adding the CommodityProducer twice in order to have two outcommods
+  tk::CommodityProducer::Add(tk::Commodity(outcommod),
+                             tk::CommodInfo(reactor_heat, cycle_efficiency));
 }
 
 //declaration of a new variable that is a string in the Cogeneration class.
@@ -60,7 +55,8 @@ std::string Cogeneration::str() {
   if (cyclus::toolkit::CommodityProducer::Produces(
           cyclus::toolkit::Commodity(outcommod))) {
     ans = "yes";
-  } else {
+  }
+  else {
     ans = "no";
   }
 
@@ -74,6 +70,36 @@ std::string Cogeneration::str() {
   return ss.str();
 }
 
+std::vector<std::string> Cogeneration::offer_amt(){
+  std::string sdemand;
+  std::vector<std::string> demand;
+  std::ifstream myfile("CAISO-demand.csv");
+
+  if(!myfile.is_open()) std::cout << "Error File Open" << '\n';
+
+  for(int i=0; i<100; i++){
+    getline(myfile, sdemand, ',');
+
+    //std::stringstream convert(sdemand);
+    demand.push_back(sdemand);
+    //std::cout << demand[i] << std::endl;
+  }
+  return demand;
+}
+
+double Cogeneration::get_offer_amt(){
+  std::vector<std::string> caiso;
+  double nuke_demand;
+  x++;
+  caiso = offer_amt();
+  std::stringstream convert(caiso[x]);
+  int y;
+  convert >> y;
+  nuke_demand = y*.056;
+  return nuke_demand;
+}
+
+
 
 std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> Cogeneration::GetMatlBids(
     cyclus::CommodMap<cyclus::Material>::type& commod_requests) {
@@ -84,48 +110,19 @@ std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> Cogeneration::GetMatlBids(
   using cyclus::Material;
   using cyclus::Request;
 
-//declaration of a new varioable with reactor_heat and inventory_size as the inputs
-long int offer_amt(){
-  string sdemand;
-  long int demand[100];
-  ifstream myfile("CAISO-demand.csv");
-
-  if(!myfile.is_open()) std::cout << "Error File Open" << '\n';
-
-  for(int i=0; i<100; i++){
-    getline(myfile, sdemand, ',');
-
-    stringstream convert(sdemand);
-    convert >> demand[i];
-    std::cout << demand[i] << std::endl;
-
-  }
-  return(demand);
-
-}
-
-long int get_offer_amt(){
-  long int caiso;
-  double nuke_demand;
-  x++;
-  caiso = offer_amt();
-  nuke_demand = caiso[x]*.056;
-  return(nuke_demand);
-}
-
-
   LOG(cyclus::LEV_INFO3, "Cogeneration") << prototype() << " is bidding up "
-                                   << get_offer_amt() << " MWe of " << outcommod;
+                                   << reactor_heat*cycle_efficiency << " MWe of " << outcommod;
   LOG(cyclus::LEV_INFO5, "Cogeneration") << "stats: " << str();
 
 //If the quantity being passed is too small to be taken into consideration it is ignored
+  double max_qty = reactor_heat;
   std::set<BidPortfolio<Material>::Ptr> ports;
   if (max_qty < cyclus::eps()) {
     return ports;
-  } else if (commod_requests.count(outcommod) == 0) {
+  }
+  if (commod_requests.count(outcommod) == 0) {
     return ports;
   }
-
 
 //Point toward the amount that the sink is able to take, it is the iterator,
 //iterate through the various bids
@@ -142,6 +139,7 @@ long int get_offer_amt(){
     }
     port->AddBid(req, m, this);
   }
+
 //Constrain by the maximum the sink is able to take at any given timestep
   CapacityConstraint<Material> cc(max_qty);
   port->AddConstraint(cc);
@@ -156,20 +154,15 @@ void Cogeneration::GetMatlTrades(
                           cyclus::Material::Ptr> >& responses) {
   using cyclus::Material;
   using cyclus::Trade;
-
-
   std::vector<cyclus::Trade<cyclus::Material> >::const_iterator it;
   for (it = trades.begin(); it != trades.end(); ++it) {
-// access a member function or variable of an object through a pointer
     double qty = it->amt;
     inventory_size -= qty;
-
-//The material is not particularly important in this case so this section is
-//probably unnecessary
     Material::Ptr response;
     if (!outrecipe.empty()) {
       response = Material::Create(this, qty, context()->GetRecipe(outrecipe));
-    } else {
+    }
+    else {
       response = Material::Create(this, qty, it->request->target()->comp());
     }
     responses.push_back(std::make_pair(*it, response));
@@ -182,4 +175,4 @@ void Cogeneration::GetMatlTrades(
   extern "C" cyclus::Agent* ConstructCogeneration(cyclus::Context* ctx) {
     return new Cogeneration(ctx);
   }
-}  // namespace hybrid
+} // namespace hybrid

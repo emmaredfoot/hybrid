@@ -32,5 +32,5 @@ int main(){
 
   std::cout << demand[x] << std::endl;
 
-  return(demand[1]);
+  return(demand[7]);
 }

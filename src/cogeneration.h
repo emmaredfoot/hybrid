@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 
-#include "/home/cyc-user/cyclus/cyclus/src/cyclus.h"
+#include "cyclus.h"
 
 namespace hybrid {
 
@@ -33,6 +33,13 @@ class Cogeneration : public cyclus::Facility,
   virtual ~Cogeneration();
 
   virtual std::string version() {return 0;}
+
+  //Functions that Emma creates:
+  double get_offer_amt();
+
+  std::vector<std::string> offer_amt();
+
+
 
 //I am going to copy the above syntax to create a new method that will split the generated resource into
 //the quantities which the two sink locations demand. I am unsure as to whether I should create a new class
@@ -155,15 +162,23 @@ class Cogeneration : public cyclus::Facility,
 
    #pragma cyclus var { \
      "default": [], \
-     "uilabel": "Out Commodity Percent Allocation Based on Preferences", \
+     "uilabel": "Nuclear proportion of the electricity demand from the CA grid", \
      "doc": "Out commodity percent based on preferences " \
             "commodities (same order)." \
             " If unspecified, default is to use .5 for all "\
             "preferences.",                                                     \
    }
-   std::vector<double> allocation_percent;
-  //Ratio between commodities, second out commodity output variable - look at enrickment feed commodities,
-  //create an ordered list of commodities, ordered list of ratios for each of the commodities
+   std::vector<double> caiso_demand;
+
+   #pragma cyclus var { \
+     "doc": "The efficiency of the power cycle used for the reactor", \
+     "default": .33, \
+     "uitype": "range", \
+     "range": [0.00, 1.00], \
+     "uilabel": "cycle_efficiency", \
+     "units": "kg", \
+   }
+   double cycle_efficiency;
 
 };
 

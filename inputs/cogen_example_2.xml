@@ -10,7 +10,6 @@
   <archetypes>
     <spec> <lib>agents</lib> <name>NullInst</name></spec>
     <spec> <lib>agents</lib><name>NullRegion</name></spec>
-    <spec> <lib>agents</lib><name>KFacility</name></spec>
     <spec> <lib>cycamore</lib> <name>Source</name></spec>
     <spec> <lib>cycamore</lib> <name>Sink</name></spec>
     <spec><lib>hybrid</lib><name>Cogeneration</name></spec>
@@ -21,24 +20,10 @@
     <config>
       <Cogeneration>
         <outcommod>heat</outcommod>
+        <outcommod>electricity</outcommod>
         <throughput>6666.67</throughput>
         <cycle_efficiency>.33</cycle_efficiency>
       </Cogeneration>
-    </config>
-  </facility>
-
-  <facility>
-    <name>Turbine</name>
-    <config>
-      <KFacility>
-        <in_commod>heat</in_commod>
-        <out_commod>electricity</out_commod>
-        <recipe_name>commod_recipe</recipe_name>
-        <in_capacity>4545</in_capacity>
-        <out_capacity>1500</out_capacity>
-        <k_factor_in>1</k_factor_in>
-        <k_factor_out>1</k_factor_out>
-      </KFacility>
     </config>
   </facility>
 
@@ -55,39 +40,12 @@
   <facility>
     <name>Desalination</name>
     <config>
-      <KFacility>
-        <in_commod>heat</in_commod>
-        <out_commod>brine</out_commod>
-        <recipe_name>commod_recipe</recipe_name>
-        <in_capacity>2000</in_capacity>
-        <out_capacity>50</out_capacity>
-        <k_factor_in>1</k_factor_in>
-        <k_factor_out>1</k_factor_out>
-      </KFacility>
-    </config>
-  </facility>
-
-<!--
-  <facility>
-    <name>Desalination</name>
-    <config>
       <Sink>
         <in_commods><val>heat</val></in_commods>
-        <capacity>3000</capacity>
+        <capacity>1e100</capacity>
       </Sink>
     </config>
   </facility>
-
-  <facility>
-    <name>Seawater_Xtract</name>
-    <config>
-      <Sink>
-        <in_commods><val>brine</val></in_commods>
-        <capacity>50</capacity>
-      </Sink>
-    </config>
-  </facility>
--->
 
   <region>
     <name>SingleRegion</name>
@@ -105,10 +63,6 @@
         </entry>
         <entry>
           <prototype>Grid</prototype>
-          <number>1</number>
-        </entry>
-        <entry>
-          <prototype>Seawater_Xtract</prototype>
           <number>1</number>
         </entry>
       </initialfacilitylist>
