@@ -1,0 +1,36 @@
+/home/cyc-user/Downloads/clion-2017.3.2/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/cyc-user/cyclus/hybrid
+-- The C compiler identification is GNU 5.4.0
+-- The CXX compiler identification is GNU 5.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test COMPILER_SUPPORTS_CXX11
+-- Performing Test COMPILER_SUPPORTS_CXX11 - Success
+Debug
+CMAKE_MODULE_PATH /share/cmake-2.8/Modules;/home/cyc-user/cyclus/hybrid/cmake
+-- Using ENTERED MAIN
+/home/cyc-user/.local as CYCLUS_ROOT_DIR.
+-- Dependency Cyclus (DEPS_CYCLUS): 
+-- Dependency Library Cyclus (DEPS_LIB_CYCLUS): 
+-- Dependency Share Cyclus (DEPS_SHARE_CYCLUS): 
+-- Dependency Include Cyclus (DEPS_INCLUDE_CYCLUS): 
+-- Cyclus was not found. Make sure CYCLUS_CORE_LIBRARY and CYCLUS_CORE_INCLUDE_DIR are set.
+-- CYCLUS_CORE_SHARE_DIR was set to : /home/cyc-user/cyclus/cyclus/share
+-- CYCLUS_CORE_LIBRARY was set to : CYCLUS_CORE_LIBRARY-NOTFOUND
+-- CYCLUS_TEST_LIBRARIES was set to : CYCLUS_GTEST_LIBRARY-NOTFOUND
+CMake Error at cmake/FindCyclus.cmake:160 (MESSAGE):
+Call Stack (most recent call first):
+  CMakeLists.txt:85 (FIND_PACKAGE)
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/cyc-user/cyclus/hybrid/cmake-build-debug/CMakeFiles/CMakeOutput.log".

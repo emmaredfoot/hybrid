@@ -89,6 +89,14 @@ class Cogeneration : public cyclus::Facility,
 
   virtual std::string str();
 
+  #pragma cyclus var { \
+  "doc": "Maximum amout of material that can be transferred in or out each time step",\
+  "tooltip": "Maximum amout of material that can be transferred in or out each time step",\
+  "units": "MW",\
+  "uilabel": "Maximum throughput"\
+  }
+  double throughput;
+
 //Will need to first go through the agent phase before splitting the materials
 //All of the logic in the archetype that I am building needs to serve these functions
 //That run the simulation
