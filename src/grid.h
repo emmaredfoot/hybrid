@@ -1,4 +1,4 @@
-#line 1 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 1 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 #ifndef CYCAMORE_SRC_SINK_H_
 #define CYCAMORE_SRC_SINK_H_
 
@@ -8,29 +8,29 @@
 #include <vector>
 
 #include "cyclus.h"
-#include "cycamore_version.h"
+#include "hybrid_version.h"
 
-namespace cycamore {
+namespace hybrid {
 
 class Context;
 
-/// This facility acts as a sink of materials and products with a fixed
+/// This facility acts as a grid of materials and products with a fixed
 /// throughput (per time step) capacity and a lifetime capacity defined by a
 /// total inventory size.  The inventory size and throughput capacity both
 /// default to infinite. If a recipe is provided, it will request material with
 /// that recipe. Requests are made for any number of specified commodities.
-class Sink : public cyclus::Facility  {
+class Grid : public cyclus::Facility  {
  public:
-  Sink(cyclus::Context* ctx);
+  Grid(cyclus::Context* ctx);
 
-  virtual ~Sink();
+  virtual ~Grid();
 
   virtual std::string version() { return CYCAMORE_VERSION; }
 
-  #pragma cyclus note {     "doc":     " A sink facility that accepts materials and products with a fixed\n"    "(currently fixed) throughput (per time step) capacity and a lifetime capacity defined by\n"    " a total inventory size. The inventory size and throughput capacity\n"    " both default to infinite. If a recipe is provided, it will request\n"    " material with that recipe. Requests are made for any number of\n"    " specified commodities.\n"     }
-#line 38 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+  #pragma cyclus note {     "doc":     " A grid facility that accepts materials and products with a fixed\n"    "(currently fixed) throughput (per time step) capacity and a lifetime capacity defined by\n"    " a total inventory size. The inventory size and throughput capacity\n"    " both default to infinite. If a recipe is provided, it will request\n"    " material with that recipe. Requests are made for any number of\n"    " specified commodities.\n"     }
+#line 38 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 
-  virtual void InitFrom(cycamore::Sink* m);
+  virtual void InitFrom(hybrid::Grid* m);
 
   virtual void InitFrom(cyclus::QueryableBackend* b);
 
@@ -47,7 +47,7 @@ class Sink : public cyclus::Facility  {
   virtual cyclus::Inventories SnapshotInv();
 
   virtual void Snapshot(cyclus::DbInit di);
-#line 40 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 40 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 
   virtual std::string str();
 
@@ -57,23 +57,23 @@ class Sink : public cyclus::Facility  {
 
   virtual void Tock();
 
-  /// @brief SinkFacilities request Materials of their given commodity. Note
-  /// that it is assumed the Sink operates on a single resource type!
+  /// @brief GridFacilities request Materials of their given commodity. Note
+  /// that it is assumed the Grid operates on a single resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
       GetMatlRequests();
 
-  /// @brief SinkFacilities request Products of their given
-  /// commodity. Note that it is assumed the Sink operates on a single
+  /// @brief GridFacilities request Products of their given
+  /// commodity. Note that it is assumed the Grid operates on a single
   /// resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
       GetGenRsrcRequests();
 
-  /// @brief SinkFacilities place accepted trade Materials in their Inventory
+  /// @brief GridFacilities place accepted trade Materials in their Inventory
   virtual void AcceptMatlTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
       cyclus::Material::Ptr> >& responses);
 
-  /// @brief SinkFacilities place accepted trade Materials in their Inventory
+  /// @brief GridFacilities place accepted trade Materials in their Inventory
   virtual void AcceptGenRsrcTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
       cyclus::Product::Ptr> >& responses);
@@ -117,51 +117,51 @@ class Sink : public cyclus::Facility  {
 
  private:
   /// all facilities must have at least one input commodity
-  #pragma cyclus var {"tooltip": "input commodities",                       "doc": "commodities that the sink facility accepts",                       "uilabel": "List of Input Commodities",                       "uitype": ["oneormore", "incommodity"]}
-#line 113 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+  #pragma cyclus var {"tooltip": "input commodities",                       "doc": "commodities that the grid facility accepts",                       "uilabel": "List of Input Commodities",                       "uitype": ["oneormore", "incommodity"]}
+#line 113 "/home/cyc-user/cyclus/hybrid/src/grid.h"
   std::vector<std::string> in_commods;
   std::vector<int> cycpp_shape_in_commods;
-#line 114 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 114 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 
 
   #pragma cyclus var {"default": [],                      "doc":"preferences for each of the given commodities, in the same order."                      "Defauts to 1 if unspecified",                      "uilabel":"In Commody Preferences",                       "range": [None, [1e-299, 1e299]],                       "uitype":["oneormore", "range"]}
-#line 121 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 121 "/home/cyc-user/cyclus/hybrid/src/grid.h"
   std::vector<double> in_commod_prefs;
   std::vector<int> cycpp_shape_in_commod_prefs;
-#line 122 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 122 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 
 
   #pragma cyclus var {"default": "",                       "tooltip": "requested composition",                       "doc": "name of recipe to use for material requests, "                              "where the default (empty string) is to accept "                              "everything",                       "uilabel": "Input Recipe",                       "uitype": "inrecipe"}
-#line 130 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 130 "/home/cyc-user/cyclus/hybrid/src/grid.h"
   std::string recipe_name;
   std::vector<int> cycpp_shape_recipe_name;
 
-#line 131 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 131 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 
   /// max inventory size
-  #pragma cyclus var {"default": 1e299,                       "tooltip": "sink maximum inventory size",                       "uilabel": "Maximum Inventory",                       "uitype": "range",                       "range": [0.0, 1e299],                       "doc": "total maximum inventory size of sink facility"}
-#line 139 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+  #pragma cyclus var {"default": 1e299,                       "tooltip": "grid maximum inventory size",                       "uilabel": "Maximum Inventory",                       "uitype": "range",                       "range": [0.0, 1e299],                       "doc": "total maximum inventory size of grid facility"}
+#line 139 "/home/cyc-user/cyclus/hybrid/src/grid.h"
   double max_inv_size;
   std::vector<int> cycpp_shape_max_inv_size;
 
-#line 140 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 140 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 
   /// monthly acceptance capacity
-  #pragma cyclus var {"default": 1e299,                       "tooltip": "sink capacity",                       "uilabel": "Maximum Throughput",                       "uitype": "range",                       "range": [0.0, 1e299],                       "doc": "capacity the sink facility can "                              "accept at each time step"}
-#line 149 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+  #pragma cyclus var {"default": 1e299,                       "tooltip": "grid capacity",                       "uilabel": "Maximum Throughput",                       "uitype": "range",                       "range": [0.0, 1e299],                       "doc": "capacity the grid facility can "                              "accept at each time step"}
+#line 149 "/home/cyc-user/cyclus/hybrid/src/grid.h"
   double capacity;
   std::vector<int> cycpp_shape_capacity;
 
-#line 150 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 150 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 
   /// this facility holds material in storage.
   #pragma cyclus var {'capacity': 'max_inv_size'}
   cyclus::toolkit::ResBuf<cyclus::Resource> inventory;
   std::vector<int> cycpp_shape_inventory;
 
-#line 154 "/home/cyc-user/cyclus/cycamore/src/sink.h"
+#line 154 "/home/cyc-user/cyclus/hybrid/src/grid.h"
 };
 
-}  // namespace cycamore
+}  // namespace hybrid
 
 #endif  // CYCAMORE_SRC_SINK_H_

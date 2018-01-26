@@ -1,43 +1,43 @@
-// Implements the Sink class
+// Implements the heat_sink class
 #include <algorithm>
 #include <sstream>
 
 #include <boost/lexical_cast.hpp>
 
-#include "sink.h"
+#include "heat_sink.h"
 
-namespace cycamore {
+namespace hybrid {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Sink::Sink(cyclus::Context* ctx)
+heat_sink::heat_sink(cyclus::Context* ctx)
     : cyclus::Facility(ctx),
       capacity(std::numeric_limits<double>::max()) {
   SetMaxInventorySize(std::numeric_limits<double>::max());
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Sink::~Sink() {}
+heat_sink::~heat_sink() {}
 
-#pragma cyclus def schema cycamore::Sink
+#pragma cyclus def schema hybrid::heat_sink
 
-#pragma cyclus def annotations cycamore::Sink
+#pragma cyclus def annotations hybrid::heat_sink
 
-#pragma cyclus def infiletodb cycamore::Sink
+#pragma cyclus def infiletodb hybrid::heat_sink
 
-#pragma cyclus def snapshot cycamore::Sink
+#pragma cyclus def snapshot hybrid::heat_sink
 
-#pragma cyclus def snapshotinv cycamore::Sink
+#pragma cyclus def snapshotinv hybrid::heat_sink
 
-#pragma cyclus def initinv cycamore::Sink
+#pragma cyclus def initinv hybrid::heat_sink
 
-#pragma cyclus def clone cycamore::Sink
+#pragma cyclus def clone hybrid::heat_sink
 
-#pragma cyclus def initfromdb cycamore::Sink
+#pragma cyclus def initfromdb hybrid::heat_sink
 
-#pragma cyclus def initfromcopy cycamore::Sink
+#pragma cyclus def initfromcopy hybrid::heat_sink
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::EnterNotify() {
+void heat_sink::EnterNotify() {
   cyclus::Facility::EnterNotify();
 
   if (in_commod_prefs.size() == 0) {
@@ -54,7 +54,7 @@ void Sink::EnterNotify() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::string Sink::str() {
+std::string heat_sink::str() {
   using std::string;
   using std::vector;
   std::stringstream ss;
@@ -75,7 +75,7 @@ std::string Sink::str() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
-Sink::GetMatlRequests() {
+heat_sink::GetMatlRequests() {
   using cyclus::Material;
   using cyclus::RequestPortfolio;
   using cyclus::Request;
@@ -107,7 +107,7 @@ Sink::GetMatlRequests() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
-Sink::GetGenRsrcRequests() {
+heat_sink::GetGenRsrcRequests() {
   using cyclus::CapacityConstraint;
   using cyclus::Product;
   using cyclus::RequestPortfolio;
@@ -136,7 +136,7 @@ Sink::GetGenRsrcRequests() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::AcceptMatlTrades(
+void heat_sink::AcceptMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
                                  cyclus::Material::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Material>,
@@ -147,7 +147,7 @@ void Sink::AcceptMatlTrades(
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::AcceptGenRsrcTrades(
+void heat_sink::AcceptGenRsrcTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
                                  cyclus::Product::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Product>,
@@ -158,13 +158,13 @@ void Sink::AcceptGenRsrcTrades(
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::Tick() {
+void heat_sink::Tick() {
   using std::string;
   using std::vector;
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is ticking {";
 
   double requestAmt = RequestAmt();
-  // inform the simulation about what the sink facility will be requesting
+  // inform the simulation about what the heat_sink facility will be requesting
   if (requestAmt > cyclus::eps()) {
     for (vector<string>::iterator commod = in_commods.begin();
          commod != in_commods.end();
@@ -177,13 +177,13 @@ void Sink::Tick() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::Tock() {
+void heat_sink::Tock() {
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is tocking {";
 
-  // On the tock, the sink facility doesn't really do much.
+  // On the tock, the heat_sink facility doesn't really do much.
   // Maybe someday it will record things.
   // For now, lets just print out what we have at each timestep.
-  LOG(cyclus::LEV_INFO4, "SnkFac") << "Sink " << this->id()
+  LOG(cyclus::LEV_INFO4, "SnkFac") << "heat_sink " << this->id()
                                    << " is holding " << inventory.quantity()
                                    << " units of material at the close of month "
                                    << context()->time() << ".";
@@ -191,8 +191,8 @@ void Sink::Tock() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-extern "C" cyclus::Agent* ConstructSink(cyclus::Context* ctx) {
-  return new Sink(ctx);
+extern "C" cyclus::Agent* Constructheat_sink(cyclus::Context* ctx) {
+  return new heat_sink(ctx);
 }
 
-}  // namespace cycamore
+}  // namespace hybrid

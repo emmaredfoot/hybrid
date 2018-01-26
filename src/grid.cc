@@ -1,24 +1,24 @@
-#line 1 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
-// Implements the Sink class
+#line 1 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
+// Implements the Grid class
 #include <algorithm>
 #include <sstream>
 
 #include <boost/lexical_cast.hpp>
 
-#include "sink.h"
+#include "grid.h"
 
-namespace cycamore {
+namespace hybrid {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Sink::Sink(cyclus::Context* ctx)
+Grid::Grid(cyclus::Context* ctx)
     : cyclus::Facility(ctx),
       capacity(std::numeric_limits<double>::max()) {
   SetMaxInventorySize(std::numeric_limits<double>::max());
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Sink::~Sink() {}
-std::string Sink::schema() {
+Grid::~Grid() {}
+std::string Grid::schema() {
   return ""
     "<interleave>\n"
     "    <element name=\"in_commods\">\n"
@@ -54,19 +54,19 @@ std::string Sink::schema() {
     "    </optional>\n"
     "</interleave>\n";
 };
-#line 20 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 20 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-Json::Value Sink::annotations() {
+Json::Value Grid::annotations() {
   Json::Value root;
   Json::Reader reader;
   bool parsed_ok = reader.parse(
-    "{\"name\":\"cycamore::Sink\",\"entity\":\"facility\",\"pare"
+    "{\"name\":\"hybrid::Grid\",\"entity\":\"facility\",\"pare"
     "nts\":[\"cyclus::Facility\"],\"all_parents\":[\"cyclus::"
     "Agent\",\"cyclus::Facility\",\"cyclus::Ider\",\"cyclus::"
     "StateWrangler\",\"cyclus::TimeListener\",\"cyclus::Tra"
     "der\"],\"vars\":{\"in_commods\":{\"uitype\":[\"oneormore\","
     "\"incommodity\"],\"index\":0,\"doc\":\"commodities that "
-    "the sink facility accepts\",\"tooltip\":[\"input "
+    "the grid facility accepts\",\"tooltip\":[\"input "
     "commodities\",\"\"],\"uilabel\":[\"List of Input Commodi"
     "ties\",\"\"],\"alias\":[\"in_commods\",\"val\"],\"shape\":[-1"
     ",-1],\"type\":[\"std::vector\",\"std::string\"]},\"in_com"
@@ -85,19 +85,19 @@ Json::Value Sink::annotations() {
     "composition\",\"uilabel\":\"Input Recipe\",\"alias\":\"rec"
     "ipe_name\",\"shape\":[-1],\"type\":\"std::string\"},\"max_"
     "inv_size\":{\"uitype\":\"range\",\"index\":3,\"default\":1e"
-    "+299,\"doc\":\"total maximum inventory size of sink "
-    "facility\",\"shape\":[-1],\"tooltip\":\"sink maximum "
+    "+299,\"doc\":\"total maximum inventory size of grid "
+    "facility\",\"shape\":[-1],\"tooltip\":\"grid maximum "
     "inventory size\",\"uilabel\":\"Maximum Inventory\",\"ali"
     "as\":\"max_inv_size\",\"range\":[0.0,1e+299],\"type\":\"do"
     "uble\"},\"capacity\":{\"uitype\":\"range\",\"index\":4,\"def"
-    "ault\":1e+299,\"doc\":\"capacity the sink facility can"
+    "ault\":1e+299,\"doc\":\"capacity the grid facility can"
     " accept at each time "
-    "step\",\"shape\":[-1],\"tooltip\":\"sink "
+    "step\",\"shape\":[-1],\"tooltip\":\"grid "
     "capacity\",\"uilabel\":\"Maximum Throughput\",\"alias\":\""
     "capacity\",\"range\":[0.0,1e+299],\"type\":\"double\"},\"i"
     "nventory\":{\"type\":[\"cyclus::toolkit::ResBuf\",\"cycl"
     "us::Resource\"],\"shape\":[-1,-1],\"capacity\":\"max_inv"
-    "_size\",\"index\":5}},\"doc\":\" A sink facility that "
+    "_size\",\"index\":5}},\"doc\":\" A grid facility that "
     "accepts materials and products with a fixed\\n "
     "throughput (per time step) capacity and a lifetime"
     " capacity defined by\\n a total inventory size. The"
@@ -107,13 +107,13 @@ Json::Value Sink::annotations() {
     " are made for any number of\\n specified "
     "commodities.\\n\"}", root);
   if (!parsed_ok) {
-    throw cyclus::ValueError("failed to parse annotations for cycamore::Sink.");
+    throw cyclus::ValueError("failed to parse annotations for hybrid::Grid.");
   }
   return root;
 };
-#line 22 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 22 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-void Sink::InfileToDb(cyclus::InfileTree* tree, cyclus::DbInit di) {
+void Grid::InfileToDb(cyclus::InfileTree* tree, cyclus::DbInit di) {
   cyclus::Facility::InfileToDb(tree, di);
   int rawcycpp_shape_in_commods[2] = {-1, -1};
   cycpp_shape_in_commods = std::vector<int>(rawcycpp_shape_in_commods, rawcycpp_shape_in_commods + 2);
@@ -205,9 +205,9 @@ void Sink::InfileToDb(cyclus::InfileTree* tree, cyclus::DbInit di) {
   ->AddVal("capacity", capacity, &cycpp_shape_capacity)
   ->Record();
 };
-#line 24 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 24 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-void Sink::Snapshot(cyclus::DbInit di) {
+void Grid::Snapshot(cyclus::DbInit di) {
   di.NewDatum("Info")
   ->AddVal("in_commods", in_commods, &cycpp_shape_in_commods)
   ->AddVal("in_commod_prefs", in_commod_prefs, &cycpp_shape_in_commod_prefs)
@@ -216,30 +216,30 @@ void Sink::Snapshot(cyclus::DbInit di) {
   ->AddVal("capacity", capacity, &cycpp_shape_capacity)
   ->Record();
 };
-#line 26 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 26 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-cyclus::Inventories Sink::SnapshotInv() {
+cyclus::Inventories Grid::SnapshotInv() {
   cyclus::Inventories invs;
   invs["inventory"] = inventory.PopNRes(inventory.count());
   inventory.Push(invs["inventory"]);
   return invs;
 };
-#line 28 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 28 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-void Sink::InitInv(cyclus::Inventories& inv) {
+void Grid::InitInv(cyclus::Inventories& inv) {
   inventory.Push(inv["inventory"]);
 
 };
-#line 30 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 30 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-cyclus::Agent* Sink::Clone() {
-  cycamore::Sink* m = new cycamore::Sink(context());
+cyclus::Agent* Grid::Clone() {
+  hybrid::Grid* m = new hybrid::Grid(context());
   m->InitFrom(this);
   return m;
 };
-#line 32 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 32 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-void Sink::InitFrom(cyclus::QueryableBackend* b) {
+void Grid::InitFrom(cyclus::QueryableBackend* b) {
   cyclus::Facility::InitFrom(b);
   int rawcycpp_shape_in_commods[2] = {-1, -1};
   cycpp_shape_in_commods = std::vector<int>(rawcycpp_shape_in_commods, rawcycpp_shape_in_commods + 2);
@@ -261,9 +261,9 @@ void Sink::InitFrom(cyclus::QueryableBackend* b) {
   capacity = qr.GetVal<double>("capacity");
   inventory.capacity(max_inv_size);
 };
-#line 34 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 34 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
-void Sink::InitFrom(cycamore::Sink* m) {
+void Grid::InitFrom(hybrid::Grid* m) {
   cyclus::Facility::InitFrom(m);
   int rawcycpp_shape_in_commods[2] = {-1, -1};
   cycpp_shape_in_commods = std::vector<int>(rawcycpp_shape_in_commods, rawcycpp_shape_in_commods + 2);
@@ -284,10 +284,10 @@ void Sink::InitFrom(cycamore::Sink* m) {
   capacity = m->capacity;
   inventory.capacity(m->inventory.capacity());
 };
-#line 38 "/home/cyc-user/cyclus/cycamore/src/sink.cc"
+#line 38 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::EnterNotify() {
+void Grid::EnterNotify() {
   cyclus::Facility::EnterNotify();
 
   if (in_commod_prefs.size() == 0) {
@@ -304,7 +304,7 @@ void Sink::EnterNotify() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::string Sink::str() {
+std::string Grid::str() {
   using std::string;
   using std::vector;
   std::stringstream ss;
@@ -325,7 +325,7 @@ std::string Sink::str() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
-Sink::GetMatlRequests() {
+Grid::GetMatlRequests() {
   using cyclus::Material;
   using cyclus::RequestPortfolio;
   using cyclus::Request;
@@ -357,7 +357,7 @@ Sink::GetMatlRequests() {
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
-Sink::GetGenRsrcRequests() {
+Grid::GetGenRsrcRequests() {
   using cyclus::CapacityConstraint;
   using cyclus::Product;
   using cyclus::RequestPortfolio;
@@ -386,7 +386,7 @@ Sink::GetGenRsrcRequests() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::AcceptMatlTrades(
+void Grid::AcceptMatlTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
                                  cyclus::Material::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Material>,
@@ -397,7 +397,7 @@ void Sink::AcceptMatlTrades(
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::AcceptGenRsrcTrades(
+void Grid::AcceptGenRsrcTrades(
     const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
                                  cyclus::Product::Ptr> >& responses) {
   std::vector< std::pair<cyclus::Trade<cyclus::Product>,
@@ -408,13 +408,13 @@ void Sink::AcceptGenRsrcTrades(
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::Tick() {
+void Grid::Tick() {
   using std::string;
   using std::vector;
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is ticking {";
 
   double requestAmt = RequestAmt();
-  // inform the simulation about what the sink facility will be requesting
+  // inform the simulation about what the grid facility will be requesting
   if (requestAmt > cyclus::eps()) {
     for (vector<string>::iterator commod = in_commods.begin();
          commod != in_commods.end();
@@ -427,13 +427,13 @@ void Sink::Tick() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Sink::Tock() {
+void Grid::Tock() {
   LOG(cyclus::LEV_INFO3, "SnkFac") << prototype() << " is tocking {";
 
-  // On the tock, the sink facility doesn't really do much.
+  // On the tock, the grid facility doesn't really do much.
   // Maybe someday it will record things.
   // For now, lets just print out what we have at each timestep.
-  LOG(cyclus::LEV_INFO4, "SnkFac") << "Sink " << this->id()
+  LOG(cyclus::LEV_INFO4, "SnkFac") << "Grid " << this->id()
                                    << " is holding " << inventory.quantity()
                                    << " units of material at the close of month "
                                    << context()->time() << ".";
@@ -441,8 +441,8 @@ void Sink::Tock() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-extern "C" cyclus::Agent* ConstructSink(cyclus::Context* ctx) {
-  return new Sink(ctx);
+extern "C" cyclus::Agent* ConstructGrid(cyclus::Context* ctx) {
+  return new Grid(ctx);
 }
 
-}  // namespace cycamore
+}  // namespace hybrid

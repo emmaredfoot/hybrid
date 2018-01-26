@@ -7,28 +7,28 @@
 #include <vector>
 
 #include "cyclus.h"
-#include "cycamore_version.h"
+#include "hybrid_version.h"
 
 namespace hybrid {
 
 class Context;
 
-/// This facility acts as a sink of materials and products with a fixed
+/// This facility acts as a heat_sink of materials and products with a fixed
 /// throughput (per time step) capacity and a lifetime capacity defined by a
 /// total inventory size.  The inventory size and throughput capacity both
 /// default to infinite. If a recipe is provided, it will request material with
 /// that recipe. Requests are made for any number of specified commodities.
-class Sink : public cyclus::Facility  {
+class heat_sink : public cyclus::Facility  {
  public:
-  Sink(cyclus::Context* ctx);
+  heat_sink(cyclus::Context* ctx);
 
-  virtual ~Sink();
+  virtual ~heat_sink();
 
   virtual std::string version() { return CYCAMORE_VERSION; }
 
   #pragma cyclus note { \
     "doc": \
-    " A sink facility that accepts materials and products with a fixed\n"\
+    " A heat_sink facility that accepts materials and products with a fixed\n"\
     " throughput (per time step) capacity and a lifetime capacity defined by\n"\
     " a total inventory size. The inventory size and throughput capacity\n"\
     " both default to infinite. If a recipe is provided, it will request\n"\
@@ -48,23 +48,23 @@ class Sink : public cyclus::Facility  {
 
   virtual void Tock();
 
-  /// @brief SinkFacilities request Materials of their given commodity. Note
-  /// that it is assumed the Sink operates on a single resource type!
+  /// @brief heat_sinkFacilities request Materials of their given commodity. Note
+  /// that it is assumed the heat_sink operates on a single resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
       GetMatlRequests();
 
-  /// @brief SinkFacilities request Products of their given
-  /// commodity. Note that it is assumed the Sink operates on a single
+  /// @brief heat_sinkFacilities request Products of their given
+  /// commodity. Note that it is assumed the heat_sink operates on a single
   /// resource type!
   virtual std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
       GetGenRsrcRequests();
 
-  /// @brief SinkFacilities place accepted trade Materials in their Inventory
+  /// @brief heat_sinkFacilities place accepted trade Materials in their Inventory
   virtual void AcceptMatlTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
       cyclus::Material::Ptr> >& responses);
 
-  /// @brief SinkFacilities place accepted trade Materials in their Inventory
+  /// @brief heat_sinkFacilities place accepted trade Materials in their Inventory
   virtual void AcceptGenRsrcTrades(
       const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
       cyclus::Product::Ptr> >& responses);
@@ -109,7 +109,7 @@ class Sink : public cyclus::Facility  {
  private:
   /// all facilities must have at least one input commodity
   #pragma cyclus var {"tooltip": "input commodities", \
-                      "doc": "commodities that the sink facility accepts", \
+                      "doc": "commodities that the heat_sink facility accepts", \
                       "uilabel": "List of Input Commodities", \
                       "uitype": ["oneormore", "incommodity"]}
   std::vector<std::string> in_commods;
@@ -133,20 +133,20 @@ class Sink : public cyclus::Facility  {
 
   /// max inventory size
   #pragma cyclus var {"default": 1e299, \
-                      "tooltip": "sink maximum inventory size", \
+                      "tooltip": "heat_sink maximum inventory size", \
                       "uilabel": "Maximum Inventory", \
                       "uitype": "range", \
                       "range": [0.0, 1e299], \
-                      "doc": "total maximum inventory size of heat sink facility"}
+                      "doc": "total maximum inventory size of heat heat_sink facility"}
   double max_inv_size;
 
   /// monthly acceptance capacity
   #pragma cyclus var {"default": 1e299, \
-                      "tooltip": "sink capacity", \
+                      "tooltip": "heat_sink capacity", \
                       "uilabel": "Maximum Throughput", \
                       "uitype": "range", \
                       "range": [0.0, 1e299], \
-                      "doc": "capacity the sink facility can " \
+                      "doc": "capacity the heat_sink facility can " \
                              "accept at each time step"}
   double capacity;
 
@@ -155,6 +155,6 @@ class Sink : public cyclus::Facility  {
   cyclus::toolkit::ResBuf<cyclus::Resource> inventory;
 };
 
-}  // namespace cycamore
+}  // namespace hybrid
 
 #endif  // CYCAMORE_SRC_SINK_H_
