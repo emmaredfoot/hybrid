@@ -193,6 +193,7 @@ void heat_sink::Tock() {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern "C" cyclus::Agent* Constructheat_sink(cyclus::Context* ctx) {
   return new heat_sink(ctx);
-}
+};
+
 
 }  // namespace hybrid

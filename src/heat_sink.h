@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "cyclus.h"
-#include "hybrid_version.h"
 
 namespace hybrid {
 
@@ -23,8 +22,6 @@ class heat_sink : public cyclus::Facility  {
   heat_sink(cyclus::Context* ctx);
 
   virtual ~heat_sink();
-
-  virtual std::string version() { return CYCAMORE_VERSION; }
 
   #pragma cyclus note { \
     "doc": \
@@ -157,4 +154,4 @@ class heat_sink : public cyclus::Facility  {
 
 }  // namespace hybrid
 
-#endif  // CYCAMORE_SRC_SINK_H_
+#endif   // CYCAMORE_SRC_SINK_H_

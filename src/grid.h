@@ -1,4 +1,5 @@
-#line 1 "/home/cyc-user/cyclus/hybrid/src/grid.h"
+
+#line 1 "grid.h"
 #ifndef CYCAMORE_SRC_SINK_H_
 #define CYCAMORE_SRC_SINK_H_
 
@@ -8,7 +9,6 @@
 #include <vector>
 
 #include "cyclus.h"
-#include "hybrid_version.h"
 
 namespace hybrid {
 
@@ -24,8 +24,6 @@ class Grid : public cyclus::Facility  {
   Grid(cyclus::Context* ctx);
 
   virtual ~Grid();
-
-  virtual std::string version() { return CYCAMORE_VERSION; }
 
   #pragma cyclus note {     "doc":     " A grid facility that accepts materials and products with a fixed\n"    "(currently fixed) throughput (per time step) capacity and a lifetime capacity defined by\n"    " a total inventory size. The inventory size and throughput capacity\n"    " both default to infinite. If a recipe is provided, it will request\n"    " material with that recipe. Requests are made for any number of\n"    " specified commodities.\n"     }
 #line 38 "/home/cyc-user/cyclus/hybrid/src/grid.h"

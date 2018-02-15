@@ -1,3 +1,4 @@
+
 #include "elec_cogen.h"
 #include <sstream>
 #include <limits>
@@ -11,8 +12,6 @@ int x=-1;
 //namespace is like a package that encorporates all of the classes
 namespace hybrid {
 
-//Is this a definition  of new type cogeneration
-//ctx is an instance (the timestep) that is passed throughout
 ElecCogen::ElecCogen(cyclus::Context* ctx)
     : cyclus::Facility(ctx),
       reactor_size(std::numeric_limits<double>::max()),
@@ -94,6 +93,7 @@ double ElecCogen::get_offer_amt(){
   caiso = offer_amt();
   std::stringstream convert(caiso[x]);
   int y;
+  std::cout << "Here" << std::endl;
   convert >> y;
   nuke_demand = y*.056;
   return nuke_demand;
@@ -101,13 +101,13 @@ double ElecCogen::get_offer_amt(){
 
 
 
-std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> ElecCogen::GetMatlBids(
+std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> ElecCogen::GetProductBids(
     cyclus::CommodMap<cyclus::Material>::type& commod_requests) {
 
   using cyclus::Bid;
   using cyclus::BidPortfolio;
   using cyclus::CapacityConstraint;
-  using cyclus::Material;
+  using cyclus::Product;
   using cyclus::Request;
 
   LOG(cyclus::LEV_INFO3, "ElecCogen") << prototype() << " is bidding up "

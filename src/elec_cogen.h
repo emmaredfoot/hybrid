@@ -1,4 +1,4 @@
-//#ifndef If the function has been previously defined great, if not open it for this file
+//If the function has been previously defined great, if not open it for this file
 #ifndef CYCLUS_HYBRID_ELEC_COGEN_H_
 #define CYCLUS_HYBRID_ELEC_COGEN_H_
 
@@ -50,7 +50,7 @@ class ElecCogen : public cyclus::Facility,
            "The reactor_size input is the size of the reactor in MWth, a constant value\n" \
            "The cycle_efficiency input determines the output of electricity given the heat which has been allocated\n" \
            "to electricity generation\n"\
-           "The grid_demand input changes at every time step."
+           "The grid_demand input changes at every time step.\n"\
            "At each time step once the total inventory has been met, the time step has completed. \n" \
            "The lifetime capacity is defined by the total inventory size\n" \
            "There are two resources generated in the cogeneration agent.It offers its mater \n" \
@@ -60,7 +60,8 @@ class ElecCogen : public cyclus::Facility,
            "The inventory size and reactor_size both default to\n" \
            "infinite.  Supplies material results in corresponding decrease in\n" \
            "inventory, and when the inventory size reaches zero, the cogeneration can provide\n" \
-           "no more material.\n" \ }
+           "no more material.\n" \
+          }
   }
 
 //Use the default ( python's function def - define)

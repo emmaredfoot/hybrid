@@ -36,7 +36,7 @@ void Cogeneration::InitFrom(Cogeneration* m) {
 void Cogeneration::InitFrom(cyclus::QueryableBackend* b) {
   #pragma cyclus impl initfromdb hybrid::Cogeneration
   //Bringing the classes from the toolkit and saving them to a variable in this
-  //library. Inheriting the commodity producer classes. The inputs are the outcommodity
+  //library. Inheriting the commodity  classes. The inputs are the outcommodity
   //and the reactor_heat as given by the xml file
   namespace tk = cyclus::toolkit;
   tk::CommodityProducer::Add(tk::Commodity(outcommod),
@@ -61,7 +61,7 @@ std::string Cogeneration::str() {
   }
 
   ss << cyclus::Facility::str() << " supplies commodity '" << outcommod
-     << "' with recipe '" << outrecipe << "' at a reactor_heat of "
+     << "at a reactor_heat of "
      << reactor_heat << " MWth per time step "
      << " commod producer members: "
      << " produces " << outcommod << "?: " << ans
@@ -101,22 +101,22 @@ double Cogeneration::get_offer_amt(){
 
 
 
-std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> Cogeneration::GetMatlBids(
-    cyclus::CommodMap<cyclus::Material>::type& commod_requests) {
+std::set<cyclus::BidPortfolio<cyclus::Product>::Ptr> Cogeneration::GetProductBids(
+    cyclus::CommodMap<cyclus::Product>::type& commod_requests) {
 
   using cyclus::Bid;
   using cyclus::BidPortfolio;
   using cyclus::CapacityConstraint;
-  using cyclus::Material;
+  using cyclus::Product;
   using cyclus::Request;
 
   LOG(cyclus::LEV_INFO3, "Cogeneration") << prototype() << " is bidding up "
                                    << reactor_heat*cycle_efficiency << " MWe of " << outcommod;
   LOG(cyclus::LEV_INFO5, "Cogeneration") << "stats: " << str();
-
+  std::cout <<"here" << std::endl;
 //If the quantity being passed is too small to be taken into consideration it is ignored
   double max_qty = reactor_heat;
-  std::set<BidPortfolio<Material>::Ptr> ports;
+  std::set<BidPortfolio<Product>::Ptr> ports;
   if (max_qty < cyclus::eps()) {
     return ports;
   }
@@ -126,45 +126,36 @@ std::set<cyclus::BidPortfolio<cyclus::Material>::Ptr> Cogeneration::GetMatlBids(
 
 //Point toward the amount that the sink is able to take, it is the iterator,
 //iterate through the various bids
-  BidPortfolio<Material>::Ptr port(new BidPortfolio<Material>());
-  std::vector<Request<Material>*>& requests = commod_requests[outcommod];
-  std::vector<Request<Material>*>::iterator it;
+  BidPortfolio<Product>::Ptr port(new BidPortfolio<Product>());
+  std::vector<Request<Product>*>& requests = commod_requests[outcommod];
+  std::vector<Request<Product>*>::iterator it;
   for (it = requests.begin(); it != requests.end(); ++it) {
-    Request<Material>* req = *it;
-    Material::Ptr target = req->target();
+    Request<Product>* req = *it;
+    Product::Ptr target = req->target();
     double qty = std::min(target->quantity(), max_qty);
-    Material::Ptr m = Material::CreateUntracked(qty, target->comp());
-    if (!outrecipe.empty()) {
-      m = Material::CreateUntracked(qty, context()->GetRecipe(outrecipe));
-    }
-    port->AddBid(req, m, this);
+    //Product::Ptr m = Product::CreateUntracked(qty); //want to figure out a way to add quality
+  //  port->AddBid(req, m, this);
   }
 
 //Constrain by the maximum the sink is able to take at any given timestep
-  CapacityConstraint<Material> cc(max_qty);
+  CapacityConstraint<Product> cc(max_qty);
   port->AddConstraint(cc);
   ports.insert(port);
   return ports;
 }
 
 //This might be where it declares that there is a constant amount being traded at each time step
-void Cogeneration::GetMatlTrades(
-    const std::vector<cyclus::Trade<cyclus::Material> >& trades,
-    std::vector<std::pair<cyclus::Trade<cyclus::Material>,
-                          cyclus::Material::Ptr> >& responses) {
-  using cyclus::Material;
+void Cogeneration::GetProductTrades(
+    const std::vector<cyclus::Trade<cyclus::Product> >& trades,
+    std::vector<std::pair<cyclus::Trade<cyclus::Product>,
+                          cyclus::Product::Ptr>>& responses) {
+  using cyclus::Product;
   using cyclus::Trade;
-  std::vector<cyclus::Trade<cyclus::Material> >::const_iterator it;
+  std::vector<cyclus::Trade<cyclus::Product> >::const_iterator it;
   for (it = trades.begin(); it != trades.end(); ++it) {
     double qty = it->amt;
     inventory_size -= qty;
-    Material::Ptr response;
-    if (!outrecipe.empty()) {
-      response = Material::Create(this, qty, context()->GetRecipe(outrecipe));
-    }
-    else {
-      response = Material::Create(this, qty, it->request->target()->comp());
-    }
+    Product::Ptr response;
     responses.push_back(std::make_pair(*it, response));
     LOG(cyclus::LEV_INFO5, "Cogeneration") << prototype() << " sent an order"
                                      << " for " << qty << " of " << outcommod;

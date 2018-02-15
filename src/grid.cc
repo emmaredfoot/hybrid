@@ -1,3 +1,4 @@
+/*
 #line 1 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 // Implements the Grid class
 #include <algorithm>
@@ -446,3 +447,4 @@ extern "C" cyclus::Agent* ConstructGrid(cyclus::Context* ctx) {
 }
 
 }  // namespace hybrid
+*/
