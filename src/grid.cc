@@ -1,4 +1,4 @@
-/*
+
 #line 1 "/home/cyc-user/cyclus/hybrid/src/grid.cc"
 // Implements the Grid class
 #include <algorithm>
@@ -80,7 +80,7 @@ Json::Value Grid::annotations() {
     "ull,[1e-299,1e+299]],\"type\":[\"std::vector\",\"double"
     "\"]},\"recipe_name\":{\"uitype\":\"inrecipe\",\"index\":2,\""
     "default\":\"\",\"doc\":\"name of recipe to use for "
-    "material requests, where the default (empty "
+    "Product requests, where the default (empty "
     "string) is to accept "
     "everything\",\"tooltip\":\"requested "
     "composition\",\"uilabel\":\"Input Recipe\",\"alias\":\"rec"
@@ -99,12 +99,12 @@ Json::Value Grid::annotations() {
     "nventory\":{\"type\":[\"cyclus::toolkit::ResBuf\",\"cycl"
     "us::Resource\"],\"shape\":[-1,-1],\"capacity\":\"max_inv"
     "_size\",\"index\":5}},\"doc\":\" A grid facility that "
-    "accepts materials and products with a fixed\\n "
+    "accepts products with a fixed\\n "
     "throughput (per time step) capacity and a lifetime"
     " capacity defined by\\n a total inventory size. The"
     " inventory size and throughput capacity\\n both "
     "default to infinite. If a recipe is provided, it "
-    "will request\\n material with that recipe. Requests"
+    "will request\\n Product with that recipe. Requests"
     " are made for any number of\\n specified "
     "commodities.\\n\"}", root);
   if (!parsed_ok) {
@@ -325,27 +325,20 @@ std::string Grid::str() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-std::set<cyclus::RequestPortfolio<cyclus::Material>::Ptr>
-Grid::GetMatlRequests() {
-  using cyclus::Material;
+std::set<cyclus::RequestPortfolio<cyclus::Product>::Ptr>
+Grid::GetProductRequests() {
+  using cyclus::Product;
   using cyclus::RequestPortfolio;
   using cyclus::Request;
-  using cyclus::Composition;
 
-  std::set<RequestPortfolio<Material>::Ptr> ports;
-  RequestPortfolio<Material>::Ptr port(new RequestPortfolio<Material>());
+  std::set<RequestPortfolio<Product>::Ptr> ports;
+  RequestPortfolio<Product>::Ptr port(new RequestPortfolio<Product>());
   double amt = RequestAmt();
-  Material::Ptr mat;
+  Product::Ptr mat;
 
-  if (recipe_name.empty()) {
-    mat = cyclus::NewBlankMaterial(amt);
-  } else {
-    Composition::Ptr rec = this->context()->GetRecipe(recipe_name);
-    mat = cyclus::Material::CreateUntracked(amt, rec);
-  }
 
   if (amt > cyclus::eps()) {
-    std::vector<Request<Material>*> mutuals;
+    std::vector<Request<Product>*> mutuals;
     for (int i = 0; i < in_commods.size(); i++) {
       mutuals.push_back(port->AddRequest(mat, this, in_commods[i], in_commod_prefs[i]));
     }
@@ -387,11 +380,11 @@ Grid::GetGenRsrcRequests() {
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void Grid::AcceptMatlTrades(
-    const std::vector< std::pair<cyclus::Trade<cyclus::Material>,
-                                 cyclus::Material::Ptr> >& responses) {
-  std::vector< std::pair<cyclus::Trade<cyclus::Material>,
-                         cyclus::Material::Ptr> >::const_iterator it;
+void Grid::AcceptProductTrades(
+    const std::vector< std::pair<cyclus::Trade<cyclus::Product>,
+                                 cyclus::Product::Ptr> >& responses) {
+  std::vector< std::pair<cyclus::Trade<cyclus::Product>,
+                         cyclus::Product::Ptr> >::const_iterator it;
   for (it = responses.begin(); it != responses.end(); ++it) {
     inventory.Push(it->second);
   }
@@ -436,7 +429,7 @@ void Grid::Tock() {
   // For now, lets just print out what we have at each timestep.
   LOG(cyclus::LEV_INFO4, "SnkFac") << "Grid " << this->id()
                                    << " is holding " << inventory.quantity()
-                                   << " units of material at the close of month "
+                                   << " units of Product at the close of month "
                                    << context()->time() << ".";
   LOG(cyclus::LEV_INFO3, "SnkFac") << "}";
 }
@@ -447,4 +440,3 @@ extern "C" cyclus::Agent* ConstructGrid(cyclus::Context* ctx) {
 }
 
 }  // namespace hybrid
-*/

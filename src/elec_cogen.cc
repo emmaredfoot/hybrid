@@ -1,4 +1,3 @@
-
 #include "elec_cogen.h"
 #include <sstream>
 #include <limits>

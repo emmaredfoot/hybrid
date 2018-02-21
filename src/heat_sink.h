@@ -1,5 +1,5 @@
-#ifndef CYCAMORE_SRC_SINK_H_
-#define CYCAMORE_SRC_SINK_H_
+#ifndef CYCLUS_HYBRID_HEAT_SINK_H_
+#define CYCLUS_HYBRID_HEAT_SINK_H_
 
 #include <algorithm>
 #include <string>

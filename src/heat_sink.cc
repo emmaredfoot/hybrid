@@ -61,15 +61,17 @@ std::string heat_sink::str() {
   ss << cyclus::Facility::str();
 
   string msg = "";
-  msg += "accepts commodities ";
+  msg += "accepts heat commodity ";
+  /*
   for (vector<string>::iterator commod = in_commods.begin();
        commod != in_commods.end();
        commod++) {
     msg += (commod == in_commods.begin() ? "{" : ", ");
     msg += (*commod);
   }
-  msg += "} until its inventory is full at ";
-  ss << msg << inventory.capacity() << " kg.";
+  */
+  msg += "until its inventory is full at ";
+  ss << msg << inventory.capacity() << " MWth.";
   return "" + ss.str();
 }
 
